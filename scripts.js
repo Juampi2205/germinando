@@ -1,102 +1,99 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const video = document.getElementById('germination-video');
+    const imageElement = document.getElementById('germination-image');
     const container = document.querySelector('.seed-container');
     const conceptText = document.getElementById('concept-text');
     
     let isPlaying = false;
-
-    // ===========================================
-    // 1. INICIALIZACIÓN: FORZAR CARGA Y PAUSA
-    //    (Asegura que la semilla aparezca al inicio)
-    // ===========================================
-
-    // Intentamos reproducir para forzar la carga y el 'muted' (silencio)
-    video.load(); 
-    video.play().catch(() => {
-        // La Promesa falla, pero la carga se inicia.
-    });
-
-    // Aseguramos el estado inicial: pausado en el frame 0 (la semilla)
-    video.addEventListener('loadedmetadata', () => {
-        video.currentTime = 0; 
-        video.pause();
-    });
+    let currentFrame = 0;
+    let animationInterval;
     
-    // Fallback de pausa por si loadedmetadata tarda
-    setTimeout(() => {
-        if (video.currentTime === 0) {
-            video.pause();
-        }
-    }, 100); 
+    // ===========================================
+    // 1. CONFIGURACIÓN DE ANIMACIÓN FRAME-BY-FRAME
+    // ===========================================
+    
+    // ARRAY DE IMÁGENES:
+    const frames = [
+        'img/1.jpeg', 
+        'img/2.jpeg',
+        'img/3.jpeg',
+        'img/4.jpeg',
+        'img/5.jpeg',
+        'img/6.jpeg',
+        'img/7.jpeg' 
+    ];
+    const totalFrames = frames.length;
+    // CLAVE: 660ms por frame para una duración total de ~4 segundos.
+    const FRAME_RATE = 660; 
+
+    // Precarga todas las imágenes (para evitar parpadeos)
+    frames.forEach(src => {
+        new Image().src = src;
+    });
 
     // ===========================================
-    // 2. Lógica de Germinación (Avanzar el video)
+    // 2. Lógica de Germinación (Avanzar Frames)
     // ===========================================
-    const playGermination = () => {
-        if (isPlaying) return; 
+    const startGermination = () => {
+        if (isPlaying) return;
         
         isPlaying = true;
         conceptText.classList.add('concept-text-visible');
 
-        video.playbackRate = 1.0; 
-        
-        video.play().catch(error => {
-             console.error("Error al intentar reproducir:", error);
-             isPlaying = false;
-             conceptText.classList.remove('concept-text-visible');
-        });
-
-        // Detenemos el video al llegar al final del ciclo de germinación
-        const stopAtEnd = () => {
-            if (video.currentTime >= video.duration - 0.1) {
-                video.pause();
-                video.removeEventListener('timeupdate', stopAtEnd);
+        // Configura un intervalo para cambiar el frame (simula la reproducción)
+        animationInterval = setInterval(() => {
+            currentFrame++;
+            
+            if (currentFrame >= totalFrames) {
+                // Si llega al final, detiene el ciclo en el último frame
+                currentFrame = totalFrames - 1;
+                clearInterval(animationInterval);
+                isPlaying = false; 
             }
-        };
-        video.addEventListener('timeupdate', stopAtEnd);
+            
+            imageElement.src = frames[currentFrame];
+            
+        }, FRAME_RATE);
     };
 
     // ===========================================
-    // 3. Lógica de Retraimiento (Volver al inicio)
+    // 3. Lógica de Retraimiento (Volver a Semilla)
     // ===========================================
-    const pauseGermination = () => {
+    const resetGermination = () => {
+        if (animationInterval) {
+            clearInterval(animationInterval); // Detiene cualquier animación en curso
+        }
         isPlaying = false;
         conceptText.classList.remove('concept-text-visible');
         
-        video.pause();
-        
-        // Regresa el video al frame de la semilla (rápido y confiable)
-        setTimeout(() => {
-            if (!isPlaying) { 
-                video.currentTime = 0; 
-            }
-        }, 100); 
+        // Vuelve al primer frame (la semilla)
+        currentFrame = 0;
+        imageElement.src = frames[currentFrame];
     };
 
     // ===========================================
-    // 4. LÓGICA CLAVE: INTERACCIÓN DE ALTERNANCIA (TOGGLE)
+    // 4. INTERACCIÓN DE ALTERNANCIA (TOGGLE)
     // ===========================================
-
+    
     const handleToggleInteraction = (e) => {
-        // Prevenir el comportamiento por defecto (scroll/zoom) en touch y mouse
         e.preventDefault(); 
         
-        // Si el video está en estado de semilla (o muy cerca del inicio)
-        if (video.currentTime < 0.1) {
-            playGermination();
+        // Si no está en el primer frame (o ya terminó la animación), resetea
+        if (currentFrame > 0) {
+            resetGermination();
         } else {
-            // Si está germinando o ha terminado, lo regresamos a semilla
-            pauseGermination();
+            // Si está en el primer frame, inicia la germinación
+            startGermination();
         }
     };
 
     // Asignación de Eventos
     
-    // Desktop: Mouse Clic (Es más robusto que el hover para esta lógica de toggle)
+    // Desktop: Click para alternar
     container.addEventListener('click', handleToggleInteraction);
     
-    // Móvil: Touch (Usamos solo touchstart para alternar en un solo toque)
+    // Móvil: Touch (Usamos solo touchstart)
     container.addEventListener('touchstart', handleToggleInteraction, { passive: false });
     
-    // Removemos mouseover/mouseout para evitar conflictos con la lógica de click/touch
+    // Aseguramos que inicie en el estado de semilla
+    imageElement.src = frames[0];
 });

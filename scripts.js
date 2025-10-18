@@ -6,10 +6,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let isPlaying = false;
 
     // ===========================================
-    // INICIALIZACIÓN: FORZAR CARGA Y PAUSA
+    // INICIALIZACIÓN: FORZAR CARGA Y PAUSA (ROBUSTO)
     // ===========================================
 
-    // CLAVE: Intentamos reproducir inmediatamente para forzar la carga (y luego pausamos)
+    // Intentamos reproducir para forzar la carga (y luego pausamos)
     video.load(); 
     video.play().catch(() => {
         // La promesa falla si el navegador lo bloquea, pero la carga se inicia.
@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
         video.pause();
     });
     
-    // Fallback de pausa si loadedmetadata tarda o falla
+    // Fallback de pausa si loadedmetadata tarda
     setTimeout(() => {
         if (video.currentTime === 0) {
             video.pause();
@@ -32,7 +32,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Lógica de Germinación (Avanzar el video)
     // ===========================================
     const playGermination = () => {
-        // Solo reproduce si no se está reproduciendo ya
         if (isPlaying) return; 
         
         isPlaying = true;
@@ -40,7 +39,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         video.playbackRate = 1.0; 
         
-        // Intentamos reproducir (la reproducción ahora SÍ funcionará porque ya se intentó una vez al inicio)
         video.play().catch(error => {
              console.error("Error al intentar reproducir:", error);
              isPlaying = false;
@@ -61,17 +59,17 @@ document.addEventListener('DOMContentLoaded', () => {
     // Lógica de Retraimiento (Volver al inicio)
     // ===========================================
     const pauseGermination = () => {
+        // Detiene el video
+        video.pause();
         isPlaying = false;
         conceptText.classList.remove('concept-text-visible');
         
-        video.pause();
-        
-        // Regresa el video al frame de la semilla
+        // Regresa el video al frame de la semilla (más rápido para móvil)
         setTimeout(() => {
             if (!isPlaying) { 
                 video.currentTime = 0; 
             }
-        }, 500); 
+        }, 100); // 💡 CLAVE: 100ms para que la respuesta al levantar el dedo sea casi instantánea
     };
 
     // ===========================================
@@ -89,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     
     container.addEventListener('touchend', (e) => {
-        e.preventDefault();
+        // No prevenimos el default aquí para que el navegador maneje la interacción base
         pauseGermination();
     });
 });

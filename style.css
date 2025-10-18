@@ -1,0 +1,166 @@
+/*
+====================================
+1. RESET Y VARIABLES
+====================================
+*/
+:root {
+    /* El fondo de la página DEBE ser blanco puro para fusionarse con el video */
+    --color-fondo: #FFFFFF; 
+    --color-texto: #333333;
+    --color-acento: #4CAF50; /* Verde de la hoja */
+    --fuente: 'Playfair Display', serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    height: 100%;
+    /* CLAVE: Elimina el scroll no deseado */
+    overflow: hidden; 
+    background-color: var(--color-fondo);
+    font-family: var(--fuente);
+    cursor: default;
+}
+
+/*
+====================================
+2. CONTENEDOR PRINCIPAL (CENTRADOR)
+====================================
+*/
+.seed-container {
+    height: 100vh;
+    width: 100vw;
+    /* CLAVE: Fija el contenedor a la ventana de visualización */
+    position: fixed; 
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center; /* Centrado horizontal */
+    align-items: center;     /* Centrado vertical */
+    overflow: hidden;
+}
+
+/*
+====================================
+3. ESTILO DEL VIDEO (FUSIÓN Y CENTRADO)
+====================================
+*/
+#germination-video {
+    max-height: 80vh; 
+    max-width: 90vw;
+    width: auto;
+    
+    object-fit: contain; 
+    
+    /* Asegura que no se muestre ningún fondo del reproductor */
+    background-color: transparent; 
+    border: none;
+    box-shadow: none;
+    
+    /* CLAVE: Usa filtros para blanquear el fondo del video y aumentar el contraste del sujeto. */
+    filter: brightness(1.1) contrast(1.1); 
+    
+    pointer-events: none; 
+    transition: transform 0.5s ease-out; 
+}
+
+/*
+====================================
+4. TEXTO CONCEPTUAL
+====================================
+*/
+#concept-text {
+    position: absolute;
+    bottom: 5vh; 
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+    color: var(--color-texto);
+    text-align: center;
+    z-index: 10;
+    padding: 10px;
+}
+
+#concept-text h1 {
+    font-size: 2em;
+    margin-bottom: 5px;
+}
+#concept-text p {
+    font-size: 1em;
+}
+
+/* Clase añadida por JS para hacerlo visible */
+.concept-text-visible {
+    opacity: 1;
+}
+
+/*
+====================================
+5. RESPONSIVE (Asegurar que el texto no sea demasiado grande en móvil)
+====================================
+*/
+@media (max-width: 600px) {
+    #concept-text h1 {
+        font-size: 1.5em;
+    }
+    #concept-text p {
+        font-size: 0.9em;
+    }
+}
+/*
+====================================
+5. CAPA DE INICIO (OVERLAY)
+====================================
+*/
+#welcome-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-fondo); /* Fondo blanco */
+    color: var(--color-texto);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* Asegura que esté por encima de todo */
+    transition: opacity 1s ease-out;
+    text-align: center;
+}
+
+#welcome-overlay h1 {
+    font-size: 3em;
+    margin-bottom: 10px;
+    font-family: var(--fuente);
+}
+
+#welcome-overlay p {
+    font-size: 1.2em;
+    margin-bottom: 30px;
+}
+
+#start-button {
+    padding: 15px 40px;
+    background-color: var(--color-acento);
+    color: var(--color-fondo);
+    border: none;
+    cursor: pointer;
+    font-family: var(--fuente);
+    font-size: 1.1em;
+    transition: background-color 0.3s;
+    border-radius: 5px;
+}
+
+#start-button:hover {
+    background-color: #388E3C; /* Tono de verde más oscuro */
+}
+
+/* Clase para ocultar el overlay después del clic */
+.hidden-overlay {
+    opacity: 0;
+    pointer-events: none; /* Permite hacer clic en lo que está detrás */
+}

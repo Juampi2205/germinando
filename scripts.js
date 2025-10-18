@@ -6,22 +6,23 @@ document.addEventListener('DOMContentLoaded', () => {
     let isPlaying = false;
 
     // ===========================================
-    // INICIALIZACIÓN: FORZAR CARGA Y PAUSA (ROBUSTO)
+    // 1. INICIALIZACIÓN: FORZAR CARGA Y PAUSA
+    //    (Asegura que la semilla aparezca al inicio)
     // ===========================================
 
-    // Intentamos reproducir para forzar la carga (y luego pausamos)
+    // Intentamos reproducir para forzar la carga y el 'muted' (silencio)
     video.load(); 
     video.play().catch(() => {
-        // La promesa falla si el navegador lo bloquea, pero la carga se inicia.
+        // La Promesa falla, pero la carga se inicia.
     });
 
-    // Aseguramos el estado inicial de la semilla (pausado en frame 0)
+    // Aseguramos el estado inicial: pausado en el frame 0 (la semilla)
     video.addEventListener('loadedmetadata', () => {
         video.currentTime = 0; 
         video.pause();
     });
     
-    // Fallback de pausa si loadedmetadata tarda
+    // Fallback de pausa por si loadedmetadata tarda
     setTimeout(() => {
         if (video.currentTime === 0) {
             video.pause();
@@ -29,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 100); 
 
     // ===========================================
-    // Lógica de Germinación (Avanzar el video)
+    // 2. Lógica de Germinación (Avanzar el video)
     // ===========================================
     const playGermination = () => {
         if (isPlaying) return; 
@@ -45,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
              conceptText.classList.remove('concept-text-visible');
         });
 
-        // Detenemos el video al llegar al final
+        // Detenemos el video al llegar al final del ciclo de germinación
         const stopAtEnd = () => {
             if (video.currentTime >= video.duration - 0.1) {
                 video.pause();
@@ -56,38 +57,46 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // ===========================================
-    // Lógica de Retraimiento (Volver al inicio)
+    // 3. Lógica de Retraimiento (Volver al inicio)
     // ===========================================
     const pauseGermination = () => {
-        // Detiene el video
-        video.pause();
         isPlaying = false;
         conceptText.classList.remove('concept-text-visible');
         
-        // Regresa el video al frame de la semilla (más rápido para móvil)
+        video.pause();
+        
+        // Regresa el video al frame de la semilla (rápido y confiable)
         setTimeout(() => {
             if (!isPlaying) { 
                 video.currentTime = 0; 
             }
-        }, 100); // 💡 CLAVE: 100ms para que la respuesta al levantar el dedo sea casi instantánea
+        }, 100); 
     };
 
     // ===========================================
-    // Asignación de Eventos (Desktop y Móvil)
+    // 4. LÓGICA CLAVE: INTERACCIÓN DE ALTERNANCIA (TOGGLE)
     // ===========================================
 
-    // Desktop: Mouse Hover
-    container.addEventListener('mouseover', playGermination);
-    container.addEventListener('mouseout', pauseGermination);
-    
-    // Móvil: Touch (tocar la pantalla)
-    container.addEventListener('touchstart', (e) => {
+    const handleToggleInteraction = (e) => {
+        // Prevenir el comportamiento por defecto (scroll/zoom) en touch y mouse
         e.preventDefault(); 
-        playGermination();
-    });
+        
+        // Si el video está en estado de semilla (o muy cerca del inicio)
+        if (video.currentTime < 0.1) {
+            playGermination();
+        } else {
+            // Si está germinando o ha terminado, lo regresamos a semilla
+            pauseGermination();
+        }
+    };
+
+    // Asignación de Eventos
     
-    container.addEventListener('touchend', (e) => {
-        // No prevenimos el default aquí para que el navegador maneje la interacción base
-        pauseGermination();
-    });
+    // Desktop: Mouse Clic (Es más robusto que el hover para esta lógica de toggle)
+    container.addEventListener('click', handleToggleInteraction);
+    
+    // Móvil: Touch (Usamos solo touchstart para alternar en un solo toque)
+    container.addEventListener('touchstart', handleToggleInteraction, { passive: false });
+    
+    // Removemos mouseover/mouseout para evitar conflictos con la lógica de click/touch
 });

@@ -4,7 +4,7 @@
 ====================================
 */
 :root {
-    /* Fondo Blanco Puro para la Fusión Visual */
+    /* Fondo Blanco Puro para la Fusión Visual Perfecta con la secuencia de imágenes */
     --color-fondo: #FFFFFF; 
     --color-texto: #333333;
     --color-acento: #4CAF50; 
@@ -46,28 +46,24 @@ body, html {
 
 /*
 ====================================
-3. ESTILO DEL VIDEO (FUSIÓN MEJORADA)
+3. ESTILO DE LA IMAGEN (FUSIÓN PERFECTA)
 ====================================
 */
-#germination-video {
+#germination-image {
     max-height: 80vh; 
     max-width: 90vw;
     width: auto;
     
+    /* Mantiene la relación de aspecto sin distorsionar */
     object-fit: contain; 
     
-    background-color: transparent; 
+    /* Eliminamos cualquier rastro de filtros o bordes de video */
+    filter: none; 
     border: none;
     box-shadow: none;
     
-    /* CLAVE DE FUSIÓN: Blanquea el fondo del video y aumenta el contraste del verde. */
-    filter: brightness(1.2) contrast(1.25); 
-    
-    /* Pequeño radio para suavizar los bordes del renderizado del video */
-    border-radius: 5px; 
-    
-    pointer-events: none; 
-    transition: transform 0.5s ease-out; 
+    pointer-events: none; /* La interacción se captura en el contenedor */
+    transition: transform 0.3s ease-out; 
 }
 
 /*

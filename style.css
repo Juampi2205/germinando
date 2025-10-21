@@ -4,7 +4,7 @@
 ====================================
 */
 :root {
-    /* Fondo Blanco Puro para la Fusión Visual Perfecta con la secuencia de imágenes */
+    /* CLAVE: Fondo Blanco Puro para la Fusión Visual */
     --color-fondo: #FFFFFF; 
     --color-texto: #333333;
     --color-acento: #4CAF50; 
@@ -19,7 +19,7 @@
 
 body, html {
     height: 100%;
-    /* CLAVE: Elimina el scroll no deseado */
+    /* Elimina el scroll no deseado */
     overflow: hidden; 
     background-color: var(--color-fondo);
     font-family: var(--fuente);
@@ -34,7 +34,7 @@ body, html {
 .seed-container {
     height: 100vh;
     width: 100vw;
-    /* CLAVE: Fija el contenedor a la ventana de visualización */
+    /* Fija el contenedor a la ventana de visualización */
     position: fixed; 
     top: 0;
     left: 0;
@@ -46,24 +46,28 @@ body, html {
 
 /*
 ====================================
-3. ESTILO DE LA IMAGEN (FUSIÓN PERFECTA)
+3. ESTILO DEL VIDEO (TAMAÑO EQUILIBRADO Y FUSIÓN)
 ====================================
 */
-#germination-image {
-    max-height: 80vh; 
-    max-width: 90vw;
+#germination-video {
+    /* CLAVE: Ajuste a un tamaño visible y elegante */
+    max-height: 55vh; /* Estaba en 40vh, ahora 55vh */
+    max-width: 55vw;  /* Estaba en 40vw, ahora 55vw */
     width: auto;
     
-    /* Mantiene la relación de aspecto sin distorsionar */
     object-fit: contain; 
     
-    /* Eliminamos cualquier rastro de filtros o bordes de video */
-    filter: none; 
+    background-color: transparent; 
     border: none;
     box-shadow: none;
     
-    pointer-events: none; /* La interacción se captura en el contenedor */
-    transition: transform 0.3s ease-out; 
+    /* Filtro agresivo para blanquear el fondo del video */
+    filter: brightness(1.3) contrast(1.4); 
+    
+    border-radius: 5px; 
+    
+    pointer-events: none; 
+    transition: transform 0.5s ease-out; 
 }
 
 /*
@@ -90,13 +94,17 @@ body, html {
     font-size: 1em;
 }
 
-/* Clase añadida por JS para hacerlo visible */
 .concept-text-visible {
     opacity: 1;
 }
 
 /* RESPONSIVE */
 @media (max-width: 600px) {
+    #germination-video {
+        /* Asegura que el tamaño se mantenga proporcionado en el móvil */
+        max-height: 50vh;
+        max-width: 70vw;
+    }
     #concept-text h1 {
         font-size: 1.5em;
     }

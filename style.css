@@ -73,18 +73,28 @@ body, html {
 
 /*
 ====================================
-4. TEXTO CONCEPTUAL
+4. TEXTO CONCEPTUAL (CORRECCIÓN VISIBILIDAD)
 ====================================
 */
 #concept-text {
     position: absolute;
     bottom: 5vh; 
+    /* CLAVE 3: Por defecto, el texto siempre inicia con opacidad 0 */
     opacity: 0;
     transition: opacity 1s ease-in-out;
     color: var(--color-texto);
     text-align: center;
     z-index: 10;
     padding: 10px;
+}
+
+.concept-text-hidden {
+    /* Regla redundante de seguridad, pero necesaria para GitHub Pages */
+    opacity: 0 !important;
+}
+
+.concept-text-visible {
+    opacity: 1 !important; /* Usamos !important para forzar visibilidad sobre el hidden */
 }
 
 #concept-text h1 {
@@ -95,14 +105,9 @@ body, html {
     font-size: 1em;
 }
 
-.concept-text-visible {
-    opacity: 1;
-}
-
 /* RESPONSIVE */
 @media (max-width: 600px) {
     #germination-video {
-        /* Asegura que el tamaño se mantenga proporcionado en el móvil */
         max-height: 50vh;
         max-width: 70vw;
     }

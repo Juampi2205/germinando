@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ===========================================
     // 1. INICIALIZACIÓN: FORZAR CARGA Y PAUSA
+    //    (El video DEBE tener el atributo 'muted' quitado del HTML para que esto funcione)
     // ===========================================
 
     // Intentamos reproducir para forzar la carga (y luego pausamos)
@@ -17,6 +18,8 @@ document.addEventListener('DOMContentLoaded', () => {
     video.addEventListener('loadedmetadata', () => {
         video.currentTime = 0; 
         video.pause();
+        // CLAVE: Aseguramos que inicie silenciado, aunque no esté el atributo 'muted' en el HTML
+        video.muted = true; 
     });
     
     // Fallback de pausa si loadedmetadata tarda
@@ -27,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 100); 
 
     // ===========================================
-    // 2. Lógica de Germinación (Avanzar el video)
+    // 2. Lógica de Germinación (Avanzar el video y Activar Sonido)
     // ===========================================
     const playGermination = () => {
         if (isPlaying) return; 
@@ -36,12 +39,16 @@ document.addEventListener('DOMContentLoaded', () => {
         conceptText.classList.remove('concept-text-hidden');
         conceptText.classList.add('concept-text-visible');
 
+        // CLAVE: Activamos el sonido al inicio de la interacción
+        video.muted = false; 
+
         video.playbackRate = 1.0; 
         
         video.play().catch(error => {
              console.error("Error al intentar reproducir:", error);
              isPlaying = false;
              conceptText.classList.add('concept-text-hidden');
+             video.muted = true; // Silenciamos en caso de error
         });
 
         // Detenemos el video al llegar al final
@@ -55,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // ===========================================
-    // 3. Lógica de Retraimiento (Volver al inicio)
+    // 3. Lógica de Retraimiento (Volver al inicio y Silenciar)
     // ===========================================
     const pauseGermination = () => {
         video.pause();
@@ -64,6 +71,9 @@ document.addEventListener('DOMContentLoaded', () => {
         conceptText.classList.remove('concept-text-visible');
         conceptText.classList.add('concept-text-hidden');
         
+        // CLAVE: Volvemos a silenciarlo antes de reiniciar el frame
+        video.muted = true; 
+
         // Regresa el video al frame de la semilla (rápido para móvil)
         setTimeout(() => {
             if (!isPlaying) { 
@@ -88,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Asignación de Eventos
+    // Asignación de Eventos (Click y Touch)
     container.addEventListener('click', handleToggleInteraction);
     container.addEventListener('touchstart', handleToggleInteraction, { passive: false });
 });

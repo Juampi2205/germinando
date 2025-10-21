@@ -1,14 +1,12 @@
 /*
 ====================================
-1. RESET Y VARIABLES
+1. RESET Y VARIABLES (FONDO OSCURO)
 ====================================
 */
 :root {
-    /* CLAVE 1: Blanco Puro para el centro de la pantalla */
-    --color-fondo: #FFFFFF; 
-    /* Blanco Roto/Gris muy claro para los bordes (ayuda a la ilusión de foco) */
-    --color-fondo-sombra: #F0F0F0; 
-    --color-texto: #333333;
+    /* CLAVE 1: Fondo Negro Absoluto */
+    --color-fondo: #000000; 
+    --color-texto: #EEEEEE; /* Texto claro */
     --color-acento: #4CAF50; 
     --fuente: 'Playfair Display', serif;
 }
@@ -21,16 +19,11 @@
 
 body, html {
     height: 100%;
-    /* Eliminamos el scroll */
     overflow: hidden; 
+    /* Fondo de la página es Negro Puro */
+    background-color: var(--color-fondo); 
     font-family: var(--fuente);
     cursor: default;
-    
-    /* CLAVE 2: Aplicamos el gradiente radial al body para crear el foco */
-    background: radial-gradient(circle at center, 
-                                var(--color-fondo) 0%,     /* Blanco Puro en el centro */
-                                var(--color-fondo) 60%,     /* Mantiene el blanco puro hasta 60% */
-                                var(--color-fondo-sombra) 100%); /* Transiciona suavemente a blanco roto en los bordes */
 }
 
 /*
@@ -47,33 +40,34 @@ body, html {
     left: 0;
     
     display: flex;
-    justify-content: center; /* Centrado horizontal */
-    align-items: center;     /* Centrado vertical */
+    justify-content: center; 
+    align-items: center;     
     overflow: hidden; 
 }
 
 /*
 ====================================
-3. ESTILO DEL VIDEO (TAMAÑO Y FILTRO SUAVIZADO)
+3. ESTILO DEL VIDEO (FUSIÓN CON MIX-BLEND-MODE)
 ====================================
 */
 #germination-video {
-    /* Tamaño final equilibrado */
+    /* Tamaño final equilibrado (55vh es un buen punto medio) */
     max-height: 55vh; 
     max-width: 55vw;  
     width: auto;
     
     object-fit: contain; 
-    
     background-color: transparent; 
     border: none;
     box-shadow: none;
     
-    /* Filtro suavizado: Menos agresivo, ya que el fondo ayuda. */
-    filter: brightness(1.1) contrast(1.15); 
+    /* CLAVE DE FUSIÓN DEFINITIVA: Hace transparente el color negro del video */
+    mix-blend-mode: screen; 
+    
+    /* Filtro desactivado para mantener los colores originales del video */
+    filter: none; 
     
     border-radius: 5px; 
-    
     pointer-events: none; 
     transition: transform 0.5s ease-out; 
 }
@@ -88,38 +82,21 @@ body, html {
     bottom: 5vh; 
     opacity: 0;
     transition: opacity 1s ease-in-out;
-    color: var(--color-texto);
+    color: var(--color-texto); /* Texto claro */
     text-align: center;
     z-index: 10;
     padding: 10px;
 }
 
-#concept-text h1 {
-    font-size: 2em;
-    margin-bottom: 5px;
-}
-#concept-text p {
-    font-size: 1em;
-}
+/* Clases de visibilidad se mantienen igual */
+.concept-text-hidden { opacity: 0 !important; }
+.concept-text-visible { opacity: 1 !important; }
 
-.concept-text-hidden {
-    opacity: 0 !important;
-}
-
-.concept-text-visible {
-    opacity: 1 !important;
-}
 
 /* RESPONSIVE */
 @media (max-width: 600px) {
     #germination-video {
         max-height: 50vh;
         max-width: 70vw;
-    }
-    #concept-text h1 {
-        font-size: 1.5em;
-    }
-    #concept-text p {
-        font-size: 0.9em;
     }
 }

@@ -6,18 +6,12 @@ document.addEventListener('DOMContentLoaded', () => {
     let isPlaying = false;
 
     // ===========================================
-    // 1. INICIALIZACIÓN Y SEGURIDAD
+    // 1. INICIALIZACIÓN: FORZAR CARGA Y PAUSA
     // ===========================================
-    
-    // CLAVE DE SEGURIDAD: Aseguramos que el texto esté oculto al iniciar (solución al 3er problema)
-    conceptText.classList.remove('concept-text-visible');
-    conceptText.classList.add('concept-text-hidden');
 
     // Intentamos reproducir para forzar la carga (y luego pausamos)
     video.load(); 
-    video.play().catch(() => {
-        // Ignoramos errores de autoplay que fallan, pero la carga se inicia.
-    });
+    video.play().catch(() => {}); // Intentamos play, pero ignoramos el error
 
     // Aseguramos el estado inicial: pausado en el frame 0 (la semilla)
     video.addEventListener('loadedmetadata', () => {
@@ -85,11 +79,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const handleToggleInteraction = (e) => {
         e.preventDefault(); 
         
-        // Si el video está en estado de semilla (o muy cerca del inicio), inicia la germinación
+        // Si el video está en estado de semilla, inicia la germinación
         if (video.currentTime < 0.1) {
             playGermination();
         } else {
-            // Si ya germinó o está en reproducción, lo regresa a semilla
+            // Si ya germinó, lo regresa a semilla
             pauseGermination();
         }
     };

@@ -4,7 +4,7 @@
 ====================================
 */
 :root {
-    /* CLAVE: Fondo Blanco Puro para la Fusión Visual */
+    /* Fondo Blanco Puro para la Fusión Visual */
     --color-fondo: #FFFFFF; 
     --color-texto: #333333;
     --color-acento: #4CAF50; 
@@ -19,7 +19,7 @@
 
 body, html {
     height: 100%;
-    /* Elimina el scroll no deseado */
+    /* CLAVE 1: Eliminamos el scroll, forzado en ambos elementos */
     overflow: hidden; 
     background-color: var(--color-fondo);
     font-family: var(--fuente);
@@ -28,20 +28,21 @@ body, html {
 
 /*
 ====================================
-2. CONTENEDOR PRINCIPAL (CENTRADOR)
+2. CONTENEDOR PRINCIPAL (CENTRADOR REFORZADO)
 ====================================
 */
 .seed-container {
-    height: 100vh;
-    width: 100vw;
-    /* Fija el contenedor a la ventana de visualización */
+    /* CLAVE 2: Usamos las 4 esquinas para garantizar 100% de alto y ancho (soluciona el scroll) */
     position: fixed; 
     top: 0;
+    right: 0; 
+    bottom: 0; 
     left: 0;
+    
     display: flex;
     justify-content: center; /* Centrado horizontal */
     align-items: center;     /* Centrado vertical */
-    overflow: hidden;
+    overflow: hidden; /* Cortamos cualquier desborde interno */
 }
 
 /*
@@ -50,9 +51,9 @@ body, html {
 ====================================
 */
 #germination-video {
-    /* CLAVE: Ajuste a un tamaño visible y elegante */
-    max-height: 55vh; /* Estaba en 40vh, ahora 55vh */
-    max-width: 55vw;  /* Estaba en 40vw, ahora 55vw */
+    /* Ajuste a un tamaño visible y elegante */
+    max-height: 55vh; 
+    max-width: 55vw;  
     width: auto;
     
     object-fit: contain; 

@@ -4,8 +4,10 @@
 ====================================
 */
 :root {
-    /* Fondo Blanco Puro para la Fusión Visual */
+    /* CLAVE 1: Blanco Puro para el centro de la pantalla */
     --color-fondo: #FFFFFF; 
+    /* Blanco Roto/Gris muy claro para los bordes (ayuda a la ilusión de foco) */
+    --color-fondo-sombra: #F0F0F0; 
     --color-texto: #333333;
     --color-acento: #4CAF50; 
     --fuente: 'Playfair Display', serif;
@@ -19,11 +21,16 @@
 
 body, html {
     height: 100%;
-    /* CLAVE 1: Eliminamos el scroll, forzado en ambos elementos */
+    /* Eliminamos el scroll */
     overflow: hidden; 
-    background-color: var(--color-fondo);
     font-family: var(--fuente);
     cursor: default;
+    
+    /* CLAVE 2: Aplicamos el gradiente radial al body para crear el foco */
+    background: radial-gradient(circle at center, 
+                                var(--color-fondo) 0%,     /* Blanco Puro en el centro */
+                                var(--color-fondo) 60%,     /* Mantiene el blanco puro hasta 60% */
+                                var(--color-fondo-sombra) 100%); /* Transiciona suavemente a blanco roto en los bordes */
 }
 
 /*
@@ -32,7 +39,7 @@ body, html {
 ====================================
 */
 .seed-container {
-    /* CLAVE 2: Usamos las 4 esquinas para garantizar 100% de alto y ancho (soluciona el scroll) */
+    /* Ancla el contenedor a la ventana visible para eliminar el scroll */
     position: fixed; 
     top: 0;
     right: 0; 
@@ -42,16 +49,16 @@ body, html {
     display: flex;
     justify-content: center; /* Centrado horizontal */
     align-items: center;     /* Centrado vertical */
-    overflow: hidden; /* Cortamos cualquier desborde interno */
+    overflow: hidden; 
 }
 
 /*
 ====================================
-3. ESTILO DEL VIDEO (TAMAÑO EQUILIBRADO Y FUSIÓN)
+3. ESTILO DEL VIDEO (TAMAÑO Y FILTRO SUAVIZADO)
 ====================================
 */
 #germination-video {
-    /* Ajuste a un tamaño visible y elegante */
+    /* Tamaño final equilibrado */
     max-height: 55vh; 
     max-width: 55vw;  
     width: auto;
@@ -62,8 +69,8 @@ body, html {
     border: none;
     box-shadow: none;
     
-    /* Filtro agresivo para blanquear el fondo del video */
-    filter: brightness(1.3) contrast(1.4); 
+    /* Filtro suavizado: Menos agresivo, ya que el fondo ayuda. */
+    filter: brightness(1.1) contrast(1.15); 
     
     border-radius: 5px; 
     
@@ -73,13 +80,12 @@ body, html {
 
 /*
 ====================================
-4. TEXTO CONCEPTUAL (CORRECCIÓN VISIBILIDAD)
+4. TEXTO CONCEPTUAL
 ====================================
 */
 #concept-text {
     position: absolute;
     bottom: 5vh; 
-    /* CLAVE 3: Por defecto, el texto siempre inicia con opacidad 0 */
     opacity: 0;
     transition: opacity 1s ease-in-out;
     color: var(--color-texto);
@@ -88,21 +94,20 @@ body, html {
     padding: 10px;
 }
 
-.concept-text-hidden {
-    /* Regla redundante de seguridad, pero necesaria para GitHub Pages */
-    opacity: 0 !important;
-}
-
-.concept-text-visible {
-    opacity: 1 !important; /* Usamos !important para forzar visibilidad sobre el hidden */
-}
-
 #concept-text h1 {
     font-size: 2em;
     margin-bottom: 5px;
 }
 #concept-text p {
     font-size: 1em;
+}
+
+.concept-text-hidden {
+    opacity: 0 !important;
+}
+
+.concept-text-visible {
+    opacity: 1 !important;
 }
 
 /* RESPONSIVE */
